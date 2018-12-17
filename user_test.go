@@ -77,6 +77,18 @@ func TestCreate(t *testing.T) {
 				So(err, ShouldBeNil)
 				So(result, ShouldNotBeNil)
 			})
+
+			Convey("authsucc ", func() {
+				result, err := api.UserAuthSucc("zhangsan1")
+				So(err, ShouldBeNil)
+				So(result, ShouldNotBeNil)
+			})
+
+			Convey("batch invite users success", func() {
+				result, err := api.UserInvite([]string{"1"}, []string{"1"}, []int{1})
+				So(err, ShouldBeNil)
+				So(result, ShouldNotBeNil)
+			})
 		})
 	})
 

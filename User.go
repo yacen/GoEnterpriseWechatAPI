@@ -256,3 +256,46 @@ func (this *Api) UserConvertToUserId(openId string) (result *UserConvertToUserId
 	err = this.httpClient.PostObjectGetObject(url, user, result)
 	return
 }
+
+// ************************************* 二次验证 ****************************************
+/**
+https://work.weixin.qq.com/api/doc#90000/90135/90203
+*/
+func (this *Api) UserAuthSucc(UserId string) (result *BaseResponse, err error) {
+	token, err := this.EnsureAccessToken()
+	if err != nil {
+		return
+	}
+	result = new(BaseResponse)
+	url := CgiBinPrefix + "/user/authsucc?access_token=" + token.TokenStr + "&userid=" + UserId
+	err = this.httpClient.GetObject(url, result)
+	return
+}
+
+// ************************************* 邀请成员 ****************************************
+/**
+https://work.weixin.qq.com/api/doc#90000/90135/90202
+*/
+type UserInviteRequest struct {
+	User  []string `json:"user"`
+	Party []string `json:"party"`
+	Tag   []int    `json:"tag"`
+}
+type UserInviteResult struct {
+	BaseResponse
+	InvalidUser  []string `json:"invaliduser"`
+	InvalidParty []string `json:"invalidparty"`
+	InvalidTag   []int    `json:"invalidtag"`
+}
+
+func (this *Api) UserInvite(user, party []string, tag []int) (result *UserInviteResult, err error) {
+	token, err := this.EnsureAccessToken()
+	if err != nil {
+		return
+	}
+	req := &UserInviteRequest{User: user, Party: party, Tag: tag}
+	result = new(UserInviteResult)
+	url := CgiBinPrefix + "/batch/invite?access_token=" + token.TokenStr
+	err = this.httpClient.PostObjectGetObject(url, req, result)
+	return
+}
