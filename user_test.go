@@ -53,6 +53,30 @@ func TestCreate(t *testing.T) {
 				So(err, ShouldBeNil)
 				So(result, ShouldNotBeNil)
 			})
+
+			Convey("get department user simple list success", func() {
+				result, err := api.UserSimpleList("1", "1")
+				So(err, ShouldBeNil)
+				So(result, ShouldNotBeNil)
+			})
+
+			Convey("get department user detail list success", func() {
+				result, err := api.UserList("1", "1")
+				So(err, ShouldBeNil)
+				So(result, ShouldNotBeNil)
+			})
+
+			Convey("userid convert to openid success", func() {
+				result, err := api.UserConvertToOpenId("zhangsan")
+				So(err, ShouldBeNil)
+				So(result, ShouldNotBeNil)
+			})
+
+			Convey("openid convert to userid success", func() {
+				result, err := api.UserConvertToUserId("zhangsan1")
+				So(err, ShouldBeNil)
+				So(result, ShouldNotBeNil)
+			})
 		})
 	})
 

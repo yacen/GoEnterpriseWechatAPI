@@ -167,9 +167,9 @@ type UserSimpleListResult struct {
 }
 
 type UserSimpleItem struct {
-	UserId     string   `json:"userid"`
-	Name       string   `json:"name"`
-	Department []string `json:"department"`
+	UserId     string `json:"userid"`
+	Name       string `json:"name"`
+	Department []int  `json:"department"`
 }
 
 func (this *Api) UserSimpleList(departmentId string, fetchChild string) (result *UserSimpleListResult, err error) {
@@ -195,7 +195,7 @@ type UserListResult struct {
 type UserItem struct {
 	BaseUser
 	Avatar string `json:"avatar"`
-	Status string `json:"status"`
+	Status int    `json:"status"`
 }
 
 func (this *Api) UserList(departmentId string, fetchChild string) (result *UserListResult, err error) {
@@ -206,5 +206,53 @@ func (this *Api) UserList(departmentId string, fetchChild string) (result *UserL
 	result = new(UserListResult)
 	url := CgiBinPrefix + "/user/list?access_token=" + token.TokenStr + "&department_id=" + departmentId + "&fetch_child=" + fetchChild
 	err = this.httpClient.GetObject(url, result)
+	return
+}
+
+// ************************************* userid转openid ****************************************
+/**
+https://work.weixin.qq.com/api/doc#90000/90135/90202
+*/
+type UserConvertToOpenIdRequest struct {
+	UserId string `json:"userid"`
+}
+type UserConvertToOpenIdResult struct {
+	BaseResponse
+	OpenId string `json:"openid"`
+}
+
+func (this *Api) UserConvertToOpenId(userId string) (result *UserConvertToOpenIdResult, err error) {
+	token, err := this.EnsureAccessToken()
+	if err != nil {
+		return
+	}
+	user := &UserConvertToOpenIdRequest{UserId: userId}
+	result = new(UserConvertToOpenIdResult)
+	url := CgiBinPrefix + "/user/convert_to_openid?access_token=" + token.TokenStr
+	err = this.httpClient.PostObjectGetObject(url, user, result)
+	return
+}
+
+// ************************************* openid转userid ****************************************
+/**
+https://work.weixin.qq.com/api/doc#90000/90135/90202
+*/
+type UserConvertToUserIdRequest struct {
+	OpenId string `json:"openid"`
+}
+type UserConvertToUserIdResult struct {
+	BaseResponse
+	UserId string `json:"userid"`
+}
+
+func (this *Api) UserConvertToUserId(openId string) (result *UserConvertToUserIdResult, err error) {
+	token, err := this.EnsureAccessToken()
+	if err != nil {
+		return
+	}
+	user := &UserConvertToUserIdRequest{OpenId: openId}
+	result = new(UserConvertToUserIdResult)
+	url := CgiBinPrefix + "/user/convert_to_userid?access_token=" + token.TokenStr
+	err = this.httpClient.PostObjectGetObject(url, user, result)
 	return
 }
