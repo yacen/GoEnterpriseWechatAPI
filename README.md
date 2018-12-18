@@ -54,3 +54,6 @@ api := NewApi(
 result, err := api.UserGet("zhangsan")
 
 ````
+
+## 问题
+欢迎大家提出bug，作者会尽快解决。
