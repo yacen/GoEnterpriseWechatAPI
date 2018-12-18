@@ -54,7 +54,3 @@ api := NewApi(
 result, err := api.UserGet("zhangsan")
 
 ````
-## 捐赠
-如果觉得此库对你有帮助，减轻你的工作量，欢迎请作者喝杯奶茶
-
-![qrcode](./qrcode.png)
